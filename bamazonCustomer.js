@@ -2,6 +2,8 @@
 var inquirer = require("inquirer");
 // import mysql
 var mysql = require("mysql");
+// import console-table-printer
+var { printTable } = require("console-table-printer");
 // create the connection
 var connection = mysql.createConnection({
     host: "localhost",
@@ -25,7 +27,7 @@ function readProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         // Log all results of the select statement
-        console.log(res);
+        printTable(res);
         connection.end();
     });
 }

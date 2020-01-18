@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/trevorjburni/bamazon#readme",
   "dependencies": {
+    "console-table-printer": "^1.1.43",
     "inquirer": "^7.0.3",
     "mysql": "^2.17.1"
   }
