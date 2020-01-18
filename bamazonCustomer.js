@@ -16,13 +16,13 @@ var connection = mysql.createConnection({
 // establish connection and log out connection id
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "/n");
+    console.log("connected as id " + connection.threadId + "\n");
     readProducts();
 });
 
 function readProducts() {
     console.log("All products we currently have... \n");
-    connnection.query("SELECT * FROM products", function(err, res) {
+    connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         // Log all results of the select statement
         console.log(res);
