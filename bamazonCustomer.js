@@ -25,7 +25,7 @@ connection.connect(function (err) {
 });
 
 // function which prompts the user what product they would like to buy
-function purchase() {
+function selectPurchase() {
     inquirer
         .prompt([{
                 name: "item",
@@ -44,9 +44,49 @@ function purchase() {
                 }
             }
         ]).then(function (answer) {
-            console.log(answer.item, answer.quantity);
+            checkStock(answer.item, answer.quantity);
         });
 }
+
+// check stock function
+function checkStock(item_id, purchaseQuantity) {
+    connection.query("SELECT stock_quantity, product_name, price FROM products WHERE ?", {
+            item_id: item_id
+        },
+        function (err, res) {
+            if (err) throw err;
+            // if there isn't enough in stock, end connection, else make purchase
+            if (res[0].stock_quantity < purchaseQuantity) {
+                console.log("Sorry, Insufficient quantity in stock!");
+                // end connection
+                connection.end();
+            } else {
+                purchase(item_id, purchaseQuantity, res[0].product_name, res[0].stock_quantity, res[0].price);
+            }
+        }
+    )
+}
+
+// function to depricate the amount in stock
+function purchase(item_id, purchaseQuantity, product_name, stock_quantity, price) {
+    console.log("Purchasing " + purchaseQuantity + " " + product_name + "(s).");
+    console.log("Total Cost: " + (price * purchaseQuantity).toFixed(2));
+    // Run the update query
+    connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [{
+                stock_quantity: stock_quantity - purchaseQuantity
+            },
+            {
+                item_id: item_id
+            }
+        ],
+        function (err, res) {
+            if (err) throw err;
+        }
+    )
+    connection.end();
+};
 
 // function to display all products and data associated with each product
 function readProducts() {
@@ -56,7 +96,6 @@ function readProducts() {
         // Log all results of the select statement
         printTable(res);
         console.log("\n");
-        purchase();
-        connection.end();
+        selectPurchase();
     });
 };
