@@ -70,7 +70,7 @@ function checkStock(item_id, purchaseQuantity) {
 // function to depricate the amount in stock
 function purchase(item_id, purchaseQuantity, product_name, stock_quantity, price) {
     console.log("Purchasing " + purchaseQuantity + " " + product_name + "(s).");
-    console.log("Total Cost: " + (price * purchaseQuantity).toFixed(2));
+    console.log("Total Cost: $" + (price * purchaseQuantity).toFixed(2));
     // Run the update query
     connection.query(
         "UPDATE products SET ? WHERE ?",
